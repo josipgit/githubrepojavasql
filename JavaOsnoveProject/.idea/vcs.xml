@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../HibParcijalniispit2.2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../HibernateDeadlockProject" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../HibernateHQLProject" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../HibernateJPAProject" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../HibernateSQLProjekt" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../HibernateTransakcijeProject" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../vj18NovoAccountTransactionUtilProject" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../vj191JPAQueryCustomerOrderProject" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../vj19HQLAuthorBookPublisherProject" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../vj20JPAAuthorBookPublisherProject" vcs="Git" />
+  </component>
+</project>

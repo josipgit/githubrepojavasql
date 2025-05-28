@@ -1,0 +1,176 @@
+
+
+Metoda DriverManager.getConnection() ima više overload varijanti –
+možeš koristiti različite načine za povezivanje ovisno o tvojoj situaciji.
+Evo najčešćih oblika:
+
+✅ 1. Samo connection string s korisničkim imenom i lozinkom unutar njega:
+Connection conn = DriverManager.getConnection(
+    "jdbc:sqlserver://localhost:1433;databaseName=JavaAdv;user=sa;password=yourPassword;encrypt=true;trustServerCertificate=true"
+);
+Ovdje su user i password već u URL-u, pa getConnection() ne prima dodatne parametre.
+
+✅ 2. Connection string + korisničko ime i lozinka kao parametri (najčešći i čitljiviji oblik):
+String url = "jdbc:sqlserver://localhost:1433;databaseName=JavaAdv;encrypt=true;trustServerCertificate=true";
+Connection conn = DriverManager.getConnection(url, "sa", "yourPassword");
+🔸 Ovo je ono što si ti koristio u  primjeru – i to je potpuno ispravno.
+
+✅ 3. Koristeći Properties objekt (napredniji način):
+Properties props = new Properties();
+props.setProperty("user", "sa");
+props.setProperty("password", "yourPassword");
+Connection conn = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=JavaAdv", props);
+
+❌ Ako koristiš samo:
+Connection conn = DriverManager.getConnection(url);
+... onda korisničko ime i lozinka moraju biti unutar samog URL-a.
+Ako nisu, bacit će SQLException (npr. "Login failed for user").
+
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+
+PreparedStatement
+Koristi se kada izravno pišeš SQL naredbe u Java kodu, npr. SELECT, INSERT, UPDATE, DELETE.
+Prednosti:
+Štiti od SQL injekcija jer koristi zamjenske parametre (?).
+Omogućuje pripremu i višestruko izvršavanje istog upita s različitim podacima.
+Primjer:
+String sql = "SELECT * FROM Polaznik WHERE Ime = ?";
+PreparedStatement ps = conn.prepareStatement(sql);
+ps.setString(1, "Ivan");
+ResultSet rs = ps.executeQuery();
+
+
+CallableStatement
+Koristi se kada u bazi već postoji pohranjena procedura (stored procedure) i želiš ju pozvati iz Jave.
+Poziva proceduru pomoću {call ...} sintakse.
+Primjer:
+CallableStatement cs = conn.prepareCall("{call DohvatiPolaznikePoProgramu(?)}");
+cs.setInt(1, 3);
+ResultSet rs = cs.executeQuery();
+
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+
+REGEX:
+\b(Prepared|Callable)Statement\s+\w+\s*=
+
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+
+SQL KOD KOMENTARI:
+
+RAISERROR u SQL kodu generira SQLException u Java kodusamo ako je severity ≥ 16.
+RAISERROR ne rekida izvršavanje	osim ako je RETURN.
+THROW u SQL kodu UVIJEK generira SQL exception.
+THROW u SQL kodu prekida izvršavanje.
+
+RAISERROR nije pouzdan kod JDBC detekcije, a THROW jest.
+
+Preporuka: Koristi THROW umjesto RAISERROR u SQL procedurama ako želiš da
+Java sigurno uhvati grešku.
+
+
+CREATE OR ALTER PROCEDURE je savršeno ispravna sintaksa koja funkcionira ovako:
+Ako procedura već postoji:
+    Automatski će je izmijeniti (alter)
+    Neće izgubiti postavljene dozvole (permissions)
+    Neće izgubiti zavisne objekte
+
+Ako procedura ne postoji:
+    Kreirat će novu proceduru
+    Ponašat će se kao običan CREATE PROCEDURE
+
+Prednosti korištenja CREATE OR ALTER:
+    Nema potrebe za DROP PROCEDURE prije kreiranja
+    Sigurnije - izbjegavaš probleme ako procedura ne postoji
+    Čistiji kod - samo jedna naredba umjesto dvije
+    Održava dozvole - postojeće dozvole ostaju netaknute
+
+Kompatibilnost:
+    Dostupno od SQL Server 2016 SP1
+    Dostupno u Azure SQL Database
+    Ne podržano u starijim verzijama SQL Servera
+
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+
+DriverManager i DataSource su dvije različite metode u Javi za dobivanje konekcije
+na bazu podataka. Evo jednostavne i jasne usporedbe:
+
+🔹 DriverManager (stariji način)
+Koristi se za ručno stvaranje konekcije:
+
+Connection conn = DriverManager.getConnection(
+    "jdbc:sqlserver://localhost:1433;databaseName=JavaAdv",
+    "username",
+    "password"
+);
+✅ Prednosti:
+Jednostavan za male projekte i testiranje
+Ne zahtijeva dodatne konfiguracije
+❌ Nedostaci:
+Nema connection pooling (svaki put se stvara nova konekcija – sporo!)
+Teže ga je konfigurirati i mijenjati bez promjene koda
+
+🔹 DataSource (preporučeni, moderniji način)
+Koristi se za upravljanje konekcijama preko objekta, često s connection pool-om (npr. HikariCP, Apache DBCP, JNDI itd.)
+
+SQLServerDataSource ds = new SQLServerDataSource();
+ds.setServerName("localhost");
+ds.setPortNumber(1433);
+ds.setDatabaseName("JavaAdv");
+ds.setUser("username");
+ds.setPassword("password");
+
+Connection conn = ds.getConnection();
+✅ Prednosti:
+Connection pooling = brže i skalabilnije (ponovna upotreba konekcija)
+Može se koristiti preko JNDI u Java EE / Spring aplikacijama
+Lakše za testiranje i konfiguraciju (posebno u velikim sustavima)
+❌ Nedostaci:
+Malo više koda za konfiguraciju (ali ništa strašno)
+
+✅ Kada koristiti što?
+Situacija	                        Preporuka
+Mali projekt, testna aplikacija	    DriverManager
+Produkcijska aplikacija	            DataSource
+Web aplikacija (Java EE, Spring)	DataSource + JNDI
+
+Ako želiš mogu ti odmah dati gotov primjer s DataSource i HikariCP (popularni pool), ili obični SQLServerDataSource — ovisno što koristiš.
+
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+
+Osnovne JDBC klase:
+Klasa	                    Opis
+Connection	                Predstavlja vezu s bazom podataka
+PreparedStatement	        Za pripremljene (parametrizirane) SQL upite (? parametri)
+CallableStatement	        Za pozivanje pohranjenih procedura u bazi ({ call ... })
+ResultSet	                   Rezultat SQL SELECT upita – redovi koje možeš pročitati
+
+Connection, PreparedStatement, ResultSet, CallableStatement = čisti JDBC.
+Dakle da, to je JDBC pristup bazi.
+
+--------------
+
+Osnovne JPQL klase/sučelja:
+Klasa/Sučelje               	Opis
+EntityManager	                Glavni JPA API za rad s entitetima i upitima
+Query / TypedQuery<T>       	Predstavlja JPQL upit, koristi se za izvršavanje i dohvat rezultata
+EntityTransaction	            Za upravljanje transakcijama (ako se ne koristi container-managed context)
+Persistence 	                Klasa za dohvat EntityManagerFactory iz persistence.xml
+EntityManagerFactory	        Kreira EntityManager instance
+
+JPQL radi isključivo s entitetima, i koristi sljedeće ključne JPA klase:
+EntityManager – za stvaranje i izvršavanje JPQL upita
+TypedQuery<T> / Query – predstavlja sam JPQL upit
+EntityManagerFactory, Persistence – za pokretanje aplikacije i dohvat konekcija
+EntityTransaction – ako upravljaš transakcijama ručno
+
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+
+
+
+

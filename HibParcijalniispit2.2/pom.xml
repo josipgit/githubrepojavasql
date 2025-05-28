@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!-- Standardna XML deklaracija koja definira verziju i kodiranje -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<!-- Korijenski element svakog Maven projekta
+     xmlns i xsi deklariraju XML namespace i shemu za validaciju
+     Shema definira strukturu dozvoljenih elemenata unutar POM datoteke -->
+
+<modelVersion>4.0.0</modelVersion>
+<!-- Verzija POM modela – uvijek 4.0.0 za Maven 2+ -->
+
+<groupId>org.example</groupId>
+<!-- Grupni identifikator projekta – obično sličan paketu u Javi (npr. com.mojafirma) -->
+
+<artifactId>HibParcijalniispit2</artifactId>
+<!-- Naziv ovog projekta – kako će se generirati .jar/.war datoteka -->
+
+<version>1.0-SNAPSHOT</version>
+<!-- Verzija projekta – SNAPSHOT znači da je u razvoju i još nije stabilna verzija -->
+
+<properties>
+    <!-- Postavke projekta -->
+
+    <maven.compiler.source>21</maven.compiler.source>
+    <!-- Verzija Jave koja se koristi za kompajliranje koda -->
+
+    <maven.compiler.target>21</maven.compiler.target>
+    <!-- Verzija bajt koda koju će generirati (Java 21 bytecode) -->
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- Kodiranje izvornog koda – UTF-8 je standard za podršku svih znakova -->
+</properties>
+
+<dependencies>
+    <!-- Ovdje definiramo sve potrebne biblioteke (ovisnosti) koje projekt koristi -->
+
+    <dependency>
+        <groupId>jakarta.persistence</groupId>
+        <artifactId>jakarta.persistence-api</artifactId>
+        <version>3.2.0-M2</version>
+    </dependency>
+    <!-- Jakarta Persistence API – sučelja i anotacije za rad s JPA entitetima
+         (npr. @Entity, @Id, EntityManager itd.) -->
+
+    <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>2.3.232</version>
+    </dependency>
+    <!-- H2 baza podataka – lagana memorijska baza koja se koristi za testiranje i razvoj
+         Ne zahtijeva instalaciju i radi "u memoriji" -->
+
+    <dependency>
+        <groupId>org.hibernate.orm</groupId>
+        <artifactId>hibernate-core</artifactId>
+        <version>6.5.1.Final</version>
+    </dependency>
+    <!-- Hibernate Core – konkretna implementacija JPA sučelja (ORM engine)
+  Verzija 7.0.0.Alpha2 je alpha (eksperimentalna), preporuča se stabilnija verzija ako nije za testiranje -->
+
+    <dependency>
+        <groupId>com.microsoft.sqlserver</groupId>
+        <artifactId>mssql-jdbc</artifactId>
+        <version>12.6.2.jre11</version>
+    </dependency>
+
+</dependencies>
+
+</project>

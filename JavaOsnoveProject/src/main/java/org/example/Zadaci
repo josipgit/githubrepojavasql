@@ -1,0 +1,97 @@
+
+
+ZADATAK J26EvidencijaPolaznikaHash:
+
+import J26EvidencijaPolaznikaHash.Polaznik;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Scanner;
+import java.util.TreeMap;
+
+public class HashMapPrimjer {
+    public static void main(String[] args) {
+        java.util.HashMap<String, Integer> map = new HashMap<>();
+        map.put("Alen", 18);
+        map.put("Monika", 25);
+        map.put("Bob", 19);
+        map.put("Danijel", 32);
+        System.out.println(map.get("Monika"));
+    }
+}
+
+--------------------------------------------------------------------------
+
+Napiši program za evidenciju polaznika na tečaju koji osigurava jedinstvenost e-mail adresa polaznika.
+Program treba omogućiti unos polaznika i njihovih podataka te provjeriti jesu li e-mail adrese jedinstvene.
+
+* Koristi klasu Polaznik s atributima: ime, prezime i e-mail
+* Koristi HashMap<String, Polaznik> za pohranu polaznika, gdje će ključ biti e-mail adresa,
+a vrijednost objekt klase Polaznik.
+        * Napravi glavnu klasu EvidencijaPolaznika koja sadrži main metodu.
+        * Omogući korisniku unos novih polaznika (ime, prezime, e-mail).
+        * Pri dodavanju novog polaznika, provjeri je li e-mail adresa već prisutna u evidenciji polaznika.
+        Ako je e-mail adresa već prisutna, ispiši odgovarajuću poruku i ne dopusti unos polaznika s istom e-mail adresom.
+        * Omogući ispis svih polaznika na tečaju nakon unosa.
+
+Što bi trebalo izmijeniti u rješenju ako dodamo novi zahtjev?
+        * Svi polaznici moraju biti cijelo vrijeme sortirani po emailu uzlazno
+
+
+
+public class EvidencijaPolaznika {
+    //private static HashMap<String, Polaznik> evidencija = new HashMap<>();
+    private static TreeMap<String, J26EvidencijaPolaznikaHash.Polaznik> evidencija = new TreeMap<>();
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        System.out.println("Dobrodošli u Evidenciju Polaznika Tečaja s Provjerom Jedinstvenosti E-mail Adresa!");
+
+        while (true) {
+            System.out.print("Unesite ime polaznika: ");
+            String ime = scanner.nextLine();
+
+            System.out.print("Unesite prezime polaznika: ");
+            String prezime = scanner.nextLine();
+
+            System.out.print("Unesite e-mail adresu polaznika: ");
+            String email = scanner.nextLine();
+
+            if (evidencija.containsKey(email)) {
+                System.out.println("Polaznik s e-mail adresom " + email + " već je prisutan na tečaju!\n");
+            } else {
+                Polaznik noviPolaznik = new Polaznik(ime, prezime, email);
+                evidencija.put(email, noviPolaznik);
+                System.out.println("Polaznik " + ime + " " + prezime + " uspješno dodan na tečaj!\n");
+            }
+
+            System.out.print("Želite li unijeti još polaznika? (da/ne): ");
+            String odgovor = scanner.nextLine();
+
+            if (!odgovor.equalsIgnoreCase("da")) {
+                break;
+            }
+        }
+
+        System.out.println("\nPopis polaznika na tečaju:");
+        for (Polaznik polaznik : evidencija.values()) {
+            System.out.println(polaznik);
+        }
+    }
+}
+
+--------------------------------------------------------------------------
+
+Napiši program za evidenciju polaznika na tečaju koji osigurava jedinstvenost e-mail adresa polaznika
+te nasumično mijenja redoslijed polaznika prije ispisa. Program treba omogućiti unos polaznika i njihovih podataka,
+provjeriti jesu li e-mail adrese jedinstvene te ispisati polaznike u nasumičnom redoslijedu.
+
+* Koristi klasu Polaznik s atributima: ime, prezime i e-mail.
+* Koristi HashMap<String, Polaznik> za pohranu polaznika, gdje je ključ e-mail adresa,
+a vrijednost objekt klase Polaznik.
+        * Napravi glavnu klasu EvidencijaPolaznika koja sadrži main metodu.
+        * Omogući korisniku unos novih polaznika (ime, prezime, e-mail).
+        * Pri dodavanju novog polaznika, provjeri je li e-mail adresa već prisutna u evidenciji.
+        Ako je, ispiši odgovarajuću poruku i ne dopusti unos polaznika s istom e-mail adresom.
+        * Nakon unosa svih polaznika, nasumično izmiješaj redoslijed polaznika prije ispisa.
+* Ispiši sve polaznike na tečaju u nasumičnom redoslijedu.
+        * Isprobaj ispis nakon korištenja drugih metoda iz klase Collections
